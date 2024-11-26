@@ -34,23 +34,43 @@ def get_tasks():
     c.close()
     return tasks
 
+
 # タスクを追加する関数
 def add_task(title, content, due_date, status):
     conn = get_connection_db()
     c = conn.cursor()
-    c.execute('INSERT INTO tasks (title, content, due_date, status )  VALUES(?,?,?,?)', (title, content, due_date, status))
+    c.execute(
+        "INSERT INTO tasks (title, content, due_date, status )  VALUES(?,?,?,?)",
+        (title, content, due_date, status),
+    )
     conn.commit()
     c.close()
+
 
 # タスクの詳細を取得する関数
 def show_task(id):
     conn = get_connection_db()
     c = conn.cursor()
-    task = c.execute('SELECT * FROM tasks WHERE id =?', (id)).fetchone()
+    task = c.execute("SELECT * FROM tasks WHERE id =?", (id,)).fetchone()
     c.close()
     return task
 
 
+# タスクを編集する関数
+def edit_task(id, title, content, due_date, status):
+    conn = get_connection_db()
+    c = conn.cursor()
+    c.execute(
+        "UPDATE tasks SET title = ?, content = ?, due_date = ?,status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+        (title, content, due_date, status, id),
+    )
+    conn.commit()
+    c.close
 
-
-create_table()
+# タスクを削除する関数
+def delete_task(id):
+    conn = get_connection_db()
+    c = conn.cursor()
+    c.execute("DELETE FROM tasks WHERE id = ?", (id,))
+    conn.commit()
+    c.close
